@@ -24,11 +24,13 @@ public class BoxLayoutFrame extends JFrame
 
     JPanel row1 =  Utilities.makeRow();
     row1.add(new JLabel("Enter your name:"));
+    row1.add(Box.createRigidArea(new Dimension(10, 0)));
     m_name = Utilities.makeTextField();
     row1.add(m_name);
 
     JPanel row2 =  Utilities.makeRow();
     row2.add(new JLabel("Enter your age:"));
+    row2.add(Box.createRigidArea(new Dimension(10, 0)));
     m_age = Utilities.makeTextField();
     row2.add(m_age);
 
