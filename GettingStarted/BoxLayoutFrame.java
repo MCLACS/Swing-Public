@@ -15,7 +15,7 @@ public class BoxLayoutFrame extends JFrame
 
   public BoxLayoutFrame()
   {
-    super("Borderlayout Example");
+    super("BoxLayout Example");
     setSize(400, 300);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
