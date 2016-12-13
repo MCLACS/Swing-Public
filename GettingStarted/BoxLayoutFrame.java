@@ -19,34 +19,50 @@ public class BoxLayoutFrame extends JFrame
     setSize(400, 300);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    // build UI
-    getContentPane().setLayout(new BorderLayout());
+    // build rows...
+    JPanel row1 = buildRow1();
+    JPanel row2 = buildRow2();
 
-    JPanel row1 =  Utilities.makeRow();
-    row1.add(new JLabel("Enter your name:"));
-    row1.add(Box.createRigidArea(new Dimension(10, 0)));
-    m_name = Utilities.makeTextField();
-    row1.add(m_name);
-
-    JPanel row2 =  Utilities.makeRow();
-    row2.add(new JLabel("Enter your age:"));
-    row2.add(Box.createRigidArea(new Dimension(10, 0)));
-    m_age = Utilities.makeTextField();
-    row2.add(m_age);
-
-    JPanel row3 =  Utilities.makeRow();
-    row3.add(Box.createHorizontalGlue());
-    JButton btn = new JButton("Greeting");
-    btn.addActionListener(new OnClick());
-    row3.add(btn);
-
+    // build the center panel....
     JPanel center = Utilities.makeCol();
     center.add(row1);
     center.add(row2);
-    center.add(Box.createVerticalGlue());
-    center.add(row3);
 
+    // build the southern panel...
+    JPanel south = Utilities.makeRow();
+    south.add(Box.createHorizontalGlue());
+    JButton btn = Utilities.makeButton("Greeting");
+    south.add(btn);
+
+    // add center and south to the content pane...
+    getContentPane().setLayout(new BorderLayout());
     getContentPane().add(center, BorderLayout.CENTER);
+    getContentPane().add(south, BorderLayout.SOUTH);
+
+    // wire event listeners...
+    btn.addActionListener(new OnClick());
+  }
+
+  private JPanel buildRow1()
+  {
+    JPanel row1 =  Utilities.makeRow();
+    row1.add(new JLabel("Enter your name:"));
+    row1.add(Box.createRigidArea(new Dimension(10, 0)));
+    m_name = Utilities.makeTextField(150);
+    row1.add(m_name);
+    row1.add(Box.createHorizontalGlue());
+    return row1;
+  }
+
+  private JPanel buildRow2()
+  {
+    JPanel row2 =  Utilities.makeRow();
+    row2.add(new JLabel("Enter your age:"));
+    row2.add(Box.createRigidArea(new Dimension(10, 0)));
+    m_age = Utilities.makeTextField(50);
+    row2.add(m_age);
+    row2.add(Box.createHorizontalGlue());
+    return row2;
   }
 
   private class OnClick implements ActionListener
@@ -54,8 +70,15 @@ public class BoxLayoutFrame extends JFrame
     @Override
     public void actionPerformed(ActionEvent evt)
     {
-      String msg = String.format("Hello %s, your age is %s", m_name.getText(), m_age.getText());
-      JOptionPane.showMessageDialog(BoxLayoutFrame.this, msg, "Greetings!", JOptionPane.INFORMATION_MESSAGE);
+      if (m_name.getText().isEmpty() || m_age.getText().isEmpty() || !Utilities.isNumeric(m_age.getText()))
+      {
+        JOptionPane.showMessageDialog(BoxLayoutFrame.this, "Please enter a valid name and age.", "Error!", JOptionPane.ERROR_MESSAGE);
+      }
+      else
+      {
+        String msg = String.format("Hello %s, your age is %s", m_name.getText(), m_age.getText());
+        JOptionPane.showMessageDialog(BoxLayoutFrame.this, msg, "Greetings!", JOptionPane.INFORMATION_MESSAGE);
+      }
     }
   }
 }
