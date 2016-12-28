@@ -19,33 +19,29 @@ public class MVC extends JFrame
 
   public MVC()
   {
-    super("BoxLayout Example");
-    setSize(400, 300);
+    super("MVC Example");
+    setSize(600, 400);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    // build rows...
+    // build the models...
+    m_listModel = new DefaultListModel<File>();
+    populateList();
+
+    // build the views...
     JPanel row1 = buildRow1();
     JPanel row2 = buildRow2();
-
-
-    // build the center panel....
     JPanel center = Utilities.makeCol();
     center.add(row1);
     center.add(row2);
-
-    // add center to the content pane...
     getContentPane().setLayout(new BorderLayout());
     getContentPane().add(center, BorderLayout.CENTER);
 
-    populateList();
-
-    // wire event listeners...
+    // build the controllers...
     m_list.addListSelectionListener(new OnChange());
   }
 
   private JPanel buildRow1()
   {
-    m_listModel = new DefaultListModel<File>();
     m_list = new JList<File>(m_listModel);
     JScrollPane scrollPane = new JScrollPane(m_list);
 
@@ -80,13 +76,23 @@ public class MVC extends JFrame
     }
   }
 
+  private class Filter implements FilenameFilter
+  {
+      @Override
+      public boolean accept(File dir, String name)
+      {
+        return name.toUpperCase().endsWith(".WAV");
+      }
+  }
+
+  // this handler serves as the controller...
   private class OnChange implements ListSelectionListener
   {
     @Override
     public void valueChanged(ListSelectionEvent evt)
     {
       ListSelectionModel lsm = m_list.getSelectionModel();
-      if (!evt.getValueIsAdjusting())
+      if (!lsm.getValueIsAdjusting())
       {
         if (lsm.isSelectionEmpty())
         {
@@ -112,14 +118,5 @@ public class MVC extends JFrame
         }
       }
     }
-  }
-
-  private class Filter implements FilenameFilter
-  {
-      @Override
-     	public boolean accept(File dir, String name)
-      {
-        return name.toUpperCase().endsWith(".JAVA");
-      }
   }
 }
