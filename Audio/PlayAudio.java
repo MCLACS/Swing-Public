@@ -5,6 +5,7 @@ import javax.sound.sampled.*;
 public class PlayAudio
 {
   private boolean m_stopped;
+  private Clip m_clip;
 
   public static void main(String args[])
   {
@@ -34,24 +35,25 @@ public class PlayAudio
         AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
         AudioFormat format = audioStream.getFormat();
         DataLine.Info info = new DataLine.Info(Clip.class, format);
-        Clip audioClip = (Clip) AudioSystem.getLine(info);
+        m_clip = (Clip) AudioSystem.getLine(info);
 
-        audioClip.addLineListener(new AudioListener());
-        audioClip.open(audioStream);
-        audioClip.start();
+        m_clip.addLineListener(new AudioListener());
+        m_clip.open(audioStream);
+        m_clip.start();
 
         while (!m_stopped)
         {
             try
             {
-                Thread.sleep(1000);
+              System.out.println("Waiting...");
+              Thread.sleep(1000);
             }
             catch (InterruptedException ex)
             {
-                ex.printStackTrace();
+              ex.printStackTrace();
             }
         }
-        audioClip.close();
+
     }
     catch (UnsupportedAudioFileException ex)
     {
@@ -82,6 +84,7 @@ public class PlayAudio
       {
         System.out.println("Playback completed.");
         m_stopped = true;
+        m_clip.close();
       }
 }
   }
