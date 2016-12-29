@@ -5,7 +5,7 @@ import javax.swing.event.*;
 import java.io.*;
 import java.util.*;
 
-public class MVC extends JFrame
+public class ListBoxExample extends JFrame
 {
   private DefaultListModel<File> m_listModel;
   private JList<File> m_list;
@@ -13,13 +13,13 @@ public class MVC extends JFrame
 
   public static void main(String args[])
   {
-    JFrame frame = new MVC();
+    JFrame frame = new ListBoxExample();
     frame.setVisible(true);
   }
 
-  public MVC()
+  public ListBoxExample()
   {
-    super("MVC Example");
+    super("ListBox Example");
     setSize(600, 400);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -28,32 +28,40 @@ public class MVC extends JFrame
     populateList();
 
     // build the views...
-    JPanel row1 = buildRow1();
-    JPanel row2 = buildRow2();
-    JPanel center = Utilities.makeCol();
-    center.add(row1);
-    center.add(row2);
+    JPanel rowTop = buildRowTop();
+    JPanel rowBottom = buildRowBottom();
     getContentPane().setLayout(new BorderLayout());
+    JPanel center = Utilities.makeCol();
+    center.add(rowTop);
+    center.add(rowBottom);
     getContentPane().add(center, BorderLayout.CENTER);
 
     // build the controllers...
     m_list.addListSelectionListener(new OnChange());
   }
 
-  private JPanel buildRow1()
+  private JPanel buildRowTop()
   {
     m_list = new JList<File>(m_listModel);
+    m_list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     JScrollPane scrollPane = new JScrollPane(m_list);
 
     JPanel row1 =  Utilities.makeRow();
     row1.add(new JLabel("Java Files:"));
-    row1.add(Box.createRigidArea(new Dimension(10, 0)));
-    row1.add(scrollPane);
     row1.add(Box.createHorizontalGlue());
-    return row1;
+
+    JPanel col = Utilities.makeCol();
+    col.add(row1);
+    col.add(Box.createRigidArea(new Dimension(0, 5)));
+    col.add(scrollPane);
+
+    JPanel row2 =  Utilities.makeRow();
+    row2.add(col);
+
+    return row2;
   }
 
-  private JPanel buildRow2()
+  private JPanel buildRowBottom()
   {
     m_text = new JTextArea(10, 80);
     JScrollPane scrollPane = new JScrollPane(m_text);
@@ -61,7 +69,6 @@ public class MVC extends JFrame
 
     JPanel row2 =  Utilities.makeRow();
     row2.add(scrollPane);
-    row2.add(Box.createHorizontalGlue());
 
     return row2;
   }
@@ -81,7 +88,7 @@ public class MVC extends JFrame
       @Override
       public boolean accept(File dir, String name)
       {
-        return name.toUpperCase().endsWith(".WAV");
+        return name.toUpperCase().endsWith(".JAVA");
       }
   }
 
@@ -110,6 +117,7 @@ public class MVC extends JFrame
               code = code + sc.nextLine() + System.lineSeparator();
             }
             m_text.setText(code);
+            m_text.setCaretPosition(0);
           }
           catch (FileNotFoundException ex)
           {
