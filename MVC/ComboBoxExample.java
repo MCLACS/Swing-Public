@@ -43,14 +43,16 @@ public class ComboBoxExample extends JFrame
   private JPanel buildRowTop()
   {
     m_combo = new JComboBox<File>(m_comboModel);
-    m_combo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+    m_combo.setPreferredSize(new Dimension(Integer.MAX_VALUE, 40));
+    m_combo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+
 
     JPanel row =  Utilities.makeRow();
     row.add(new JLabel("Java Files:"));
     row.add(Box.createRigidArea(new Dimension(5, 0)));
     row.add(m_combo);
 
-    return row1;
+    return row;
   }
 
   private JPanel buildRowBottom()
