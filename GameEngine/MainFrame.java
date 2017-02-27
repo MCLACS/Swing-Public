@@ -7,8 +7,6 @@ import java.util.ArrayList;
 
 public class MainFrame extends JFrame
 {
-  private static Random m_rand = new Random();
-
   public static void main(String args[])
   {
     JFrame frame = new MainFrame();
@@ -21,19 +19,20 @@ public class MainFrame extends JFrame
     setSize(400, 300);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    // ----------------------------------------------------------
-    // TODO: generate 10 random game objects
-    // they should be at random locations, random speed.
-    // and random size, but the w and h should be equal...
-    // ---------------------------------------------------------
-    List<GameObject> objects = new ArrayList<GameObject>();
-    objects.add(new GameObject("ball.png", 40, 40, 30, 30, 5, 3));
+    int interval = 100;
 
-    GameView view = new GameView(objects);
-    GameController controller = new GameController(100, objects, view);
+    // model
+    List<IGameObject> objects = new ArrayList<IGameObject>();
+    objects.add(Factory.getInstance().createEnemy(10, 10, 30, 30, 5, 5));
+
+    // view
+    IGameView view = Factory.getInstance().createView(objects);
+
+    // controller
+    IGameController controller = Factory.getInstance().createController(interval, objects, view);
 
     getContentPane().setLayout(new BorderLayout());
-    getContentPane().add(view, BorderLayout.CENTER);
+    getContentPane().add(view.getJPanel(), BorderLayout.CENTER);
 
     controller.startGame();
   }
